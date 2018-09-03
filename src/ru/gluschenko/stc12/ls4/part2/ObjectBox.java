@@ -1,9 +1,6 @@
 package ru.gluschenko.stc12.ls4.part2;
 
-import ru.gluschenko.stc12.ls4.NotNumberException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 public class ObjectBox<T extends Number>{
     //почему здесь пишет Warning:(9, 5) Access can be package-private ?
@@ -13,39 +10,32 @@ public class ObjectBox<T extends Number>{
 
     }
 
-    void setList(Object[] initArray) throws NotNumberException{
-        for(Object element : initArray){
-            //почему тут не приводит к типу?
-            this.addObject((T)element);
+    void setList(T[] initArray){
+        for(T element : initArray){
+            this.addObject(element);
         }
+        Collections.sort(this.list, new NumberComparator());
     }
 
-    boolean addObject(Object element) throws NotNumberException{
+    boolean addObject(T element){
         if(element == null){
             return false;
         }
-        if (!(element instanceof Number)){
-            throw new NotNumberException(element.toString());
-        }
-        // почему тут не приводит к типу T? из-за этого в тестах на double мы не удаляем 24.0
-        // хотя с точки зрения пользователся 24 и 24.0 одинаковые числа
-        if(this.list.contains((T)element)){
+
+        if(this.list.contains(element)){
             return false;
         }
-        this.list.add((T)element);
+        this.list.add(element);
         return true;
     }
 
-    boolean deleteObject(Object element) throws NotNumberException{
+    boolean deleteObject(T element){
         if(element == null){
             return false;
         }
-        if (!(element instanceof Number)){
-            throw new NotNumberException(element.toString());
-        }
 
-        if(this.list.contains((T)element)){
-            this.list.remove((T)element);
+        if(this.list.contains(element)){
+            this.list.remove(element);
             return true;
         }
         return false;
@@ -80,3 +70,13 @@ public class ObjectBox<T extends Number>{
 
 }
 
+
+class NumberComparator<T extends Number> implements Comparator<T> {
+
+    public int compare(T a, T b){
+        if (a instanceof Comparable) {
+            return ((Comparable<T>) a).compareTo(b);
+        }
+        throw new UnsupportedOperationException();
+    }
+}

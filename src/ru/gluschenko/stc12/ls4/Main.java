@@ -6,7 +6,7 @@ public class Main {
     public static void main(String[] args) {
         Object[] initArray = new Object[10];
         initArray[0] = 7;
-        initArray[1] = 1;
+        initArray[1] = 1.01;
         initArray[2] = 2;
         initArray[3] = 2;
         initArray[4] = 19;

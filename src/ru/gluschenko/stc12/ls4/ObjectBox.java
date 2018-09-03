@@ -1,9 +1,7 @@
 package ru.gluschenko.stc12.ls4;
 
+import java.util.*;
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 public class ObjectBox<T extends Number>{
     private List<T> list = new ArrayList<>();
@@ -14,9 +12,11 @@ public class ObjectBox<T extends Number>{
 
     void setList(Object[] initArray) throws NotNumberException{
         for(Object element : initArray){
-            //почему тут не приводит к типу?
-            this.addObject((T)element);
+            //почему тут не приводит к типу? потому что не можем на этапе компиляции знать тип и поэтому отбрасывает?
+            this.addObject(element);
         }
+       //в итоге с сортировкой ничего не получилось
+       // Collections.sort(this.list, new NumberComparator());
     }
 
     Number summator(){
@@ -102,4 +102,14 @@ public class ObjectBox<T extends Number>{
         return this.toString().equals(o.toString());
     }
 
+}
+
+class NumberComparator<T extends Number> implements Comparator<T> {
+
+    public int compare(T a, T b){
+        if (a instanceof Comparable) {
+            return ((Comparable<T>) a).compareTo(b);
+        }
+        throw new UnsupportedOperationException();
+    }
 }
